@@ -1,6 +1,12 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import assests from "@/assets";
+import arrow from "@/assets/svgs/arrow.svg";
+import grid from "@/assets/svgs/grid.svg";
+import doctor1 from "@/assets/images/doctor1.png";
+import doctor2 from "@/assets/images/doctor2.png";
+import doctor3 from "@/assets/images/doctor3.png";
+import stetoscope from "@/assets/images/Stetoscope.png"
 const HeroSection = () => {
     return (
         <Container sx={{
@@ -45,14 +51,14 @@ const HeroSection = () => {
             }}>
 
                 <Box sx={{ position: "absolute", top: "-30px", left: "200px" }}>
-                    <Image width={100} height={100} src={assests.svgs.arrow} alt="arrow" />
+                    <Image width={100} height={100} src={arrow} alt="arrow" />
                 </Box>
                 <Box mt={4} sx={{ display: "flex", gap: 2 }}>
                     <Box>
-                        <Image width={240} height={380} src={assests.images.doctor1} alt="doctor 1" />
+                        <Image width={240} height={380} src={doctor1} alt="doctor 1" />
                     </Box>
                     <Box>
-                        <Image width={240} height={350} src={assests.images.doctor2} alt="doctor 2" />
+                        <Image width={240} height={350} src={doctor2} alt="doctor 2" />
                     </Box>
                 </Box>
                 <Box sx={{
@@ -62,16 +68,16 @@ const HeroSection = () => {
                     zIndex: 100,
                     filter: "drop-shadow(0px 0px 10px rgba(0,0,0,0.2))",
                 }}>
-                    <Image width={250} height={250} src={assests.images.doctor3} alt="doctor 3" />
+                    <Image width={250} height={250} src={doctor3} alt="doctor 3" />
                 </Box>
                 <Box sx={{
                     position: "absolute",
-                    bottom: "-100px",
+                    bottom: "-100px", 
                     right: "0px",
                     zIndex: -1,
                     filter: "drop-shadow(0px 0px 10px rgba(0,0,0,0.2))",
                 }}>
-                    <Image width={180} height={180} src={assests.images.stethoscope} alt="stethoscope" />
+                    <Image width={180} height={180} src={stetoscope} alt="stethoscope" />
                 </Box>
             </Box>
 
