@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { userLogin } from "@/services/actions/userLogin";
 import { toast } from "sonner";
+import { storeUserInfo } from "@/services/auth.service";
 
 export type TLoginInfo = {
   email: string;
@@ -25,6 +26,7 @@ const LoginPage = () => {
       const response = await userLogin(data);
       if(response?.data?.accessToken){
         toast.success(response?.message)
+        storeUserInfo(response?.data?.accessToken)
       }
       console.log(response);
        
