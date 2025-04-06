@@ -4,22 +4,65 @@ import Image from "next/image";
 import assets from "@/assets";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { modifyPayload } from "@/utils/modifyPayload";
+import { registerPatient } from "@/services/actions/registerPatients";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-type Inputs = {
+type TPatientData = {
   name: string;
   email: string;
-  password: string;
-  contact: string;
+  contactNumber: string;
   address: string;
 }; 
+
+interface IPatientRegisterFormData {
+  patient: TPatientData;
+  password: string;
+}
+
 const Register = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  } = useForm<IPatientRegisterFormData>()
+
+
+
+  const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (values) => {
+
+    const data = modifyPayload(values)
+
+    try {
+      
+      const response = await registerPatient(data)
+      if(response?.data?.id){
+        toast.success(response?.message)
+        router.push('/login')
+      }
+      console.log(response);
+
+
+    } catch (error) {
+      toast.error("Registration failed. Please try again.")
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
+
+    }
+
+
+console.log(data);
+
+  }
+
+
+
     return (
         <div>
           <Container >
@@ -54,20 +97,20 @@ const Register = () => {
                  <form onSubmit={handleSubmit(onSubmit)}>
                  <Grid container spacing={2} my={1}>
                     <Grid item md={12}>
-                    <TextField {...register("name")} size="small" fullWidth={true} id="name" label="Name" type="text" variant="outlined" />
+                    <TextField {...register("patient.name")} size="small" fullWidth={true} id="name" label="Name" type="text" variant="outlined" />
                     </Grid>
 
                     <Grid item md={6}>
-                    <TextField {...register("email")} size="small" fullWidth={true} id="email" label="Email" type="email" variant="outlined" />
+                    <TextField {...register("patient.email")} size="small" fullWidth={true} id="email" label="Email" type="email" variant="outlined" />
                     </Grid>
                     <Grid item md={6}>
                     <TextField {...register("password")} size="small" fullWidth={true} id="password" label="Password" type="password" variant="outlined" />
                     </Grid>
                     <Grid item md={6}>
-                    <TextField {...register("contact")} size="small" fullWidth={true} id="contact" label="Contact Number" type="tel" variant="outlined" />
+                    <TextField {...register("patient.contactNumber")} size="small" fullWidth={true} id="contact" label="Contact Number" type="tel" variant="outlined" />
                     </Grid>
                     <Grid item md={6}>
-                    <TextField {...register("address")} size="small" fullWidth={true} id="address" label="Address" type="text" variant="outlined" />
+                    <TextField {...register("patient.address")} size="small" fullWidth={true} id="address" label="Address" type="text" variant="outlined" />
                     </Grid>
                   </Grid>
                   <Button type="submit" sx={{my: 2}} fullWidth={true} >Register</Button>
