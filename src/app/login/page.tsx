@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { userLogin } from "@/services/actions/userLogin";
 import { toast } from "sonner";
 import { storeUserInfo } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export type TLoginInfo = {
   email: string;
@@ -14,6 +15,7 @@ export type TLoginInfo = {
 };
 
 const LoginPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -27,8 +29,8 @@ const LoginPage = () => {
       if(response?.data?.accessToken){
         toast.success(response?.message)
         storeUserInfo(response?.data?.accessToken)
+        router.push("/")
       }
-      console.log(response);
        
     } catch (error) {
       toast.error("Login failed. Please try again.");

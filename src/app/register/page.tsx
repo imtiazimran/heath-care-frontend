@@ -8,6 +8,8 @@ import { modifyPayload } from "@/utils/modifyPayload";
 import { registerPatient } from "@/services/actions/registerPatients";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { userLogin } from "@/services/actions/userLogin";
+import { storeUserInfo } from "@/services/auth.service";
 
 type TPatientData = {
   name: string;
@@ -40,8 +42,12 @@ const Register = () => {
       
       const response = await registerPatient(data)
       if(response?.data?.id){
-        toast.success(response?.message)
-        router.push('/login')
+        toast.success(response?.message);
+         const loginRes = await userLogin({password: values.password, email: values.patient.email});
+              if(loginRes?.data?.accessToken){
+                storeUserInfo(loginRes?.data?.accessToken)
+                router.push("/")
+              }
       }
       console.log(response);
 
