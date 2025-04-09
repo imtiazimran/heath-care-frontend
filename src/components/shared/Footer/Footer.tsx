@@ -10,7 +10,7 @@ const Footer = () => {
             <Container >
                 <Stack direction="row" gap={4} justifyContent={"center"}>
                     <Typography color={"white"} component={Link} href="/consultation">Consultation</Typography>
-                    <Typography color={"white"} component={Link} href="/>HeathPlans">Heath Plans</Typography>
+                    <Typography color={"white"} component={Link} href="/HeathPlans">Heath Plans</Typography>
                     <Typography color={"white"} component={Link} href="/medicine">Medicine</Typography>
                     <Typography color={"white"} component={Link} href="/login">Diagonostics</Typography>
                     <Typography color={"white"} component={Link} href="/login">NGOs</Typography>

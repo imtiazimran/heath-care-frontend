@@ -3,27 +3,27 @@ import { Box, Button, Container, Grid, Stack, TextField, Typography } from "@mui
 import Image from "next/image";
 import assets from "@/assets";
 import Link from "next/link";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { userLogin } from "@/services/actions/userLogin";
 import { toast } from "sonner";
 import { storeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
+import PHForms from "@/components/Forms/PHForms";
+import PHInput from "@/components/Forms/PHInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export type TLoginInfo = {
-  email: string;
-  password: string;
-};
+
+const validationSchema = z.object({
+  email: z.string().email("Invalid email address!").nonempty("Email is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+})
+
 
 const LoginPage = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TLoginInfo>();
 
-  const onSubmit: SubmitHandler<TLoginInfo> = async (data) => {
-    
+  const handleLogin = async (data: FieldValues) => {
     try {
       const response = await userLogin(data);
       if(response?.data?.accessToken){
@@ -74,39 +74,31 @@ const LoginPage = () => {
             </Box>
           </Stack>
           <Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <PHForms onSubmit={handleLogin} resolver={zodResolver(validationSchema)}>
               <Grid container spacing={2} my={1}>
                 <Grid item md={6}>
-                  <TextField
+                  <PHInput
+                    name="email"
                     size="small"
                     fullWidth
-                    id="email"
                     label="Email"
                     type="email"
-                    variant="outlined"
-                    {...register("email", { required: "Email is required" })}
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
                   />
                 </Grid>
                 <Grid item md={6}>
-                  <TextField
+                  <PHInput
+                    name="password"
                     size="small"
                     fullWidth
-                    id="password"
                     label="Password"
                     type="password"
-                    variant="outlined"
-                    {...register("password", { required: "Password is required" })}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
                   />
                 </Grid>
               </Grid>
               <Button sx={{ my: 2 }} fullWidth type="submit">
                 Login
               </Button>
-            </form>
+            </PHForms>
             <Typography my={2} component="p" fontWeight={300}>
               Forgot Password?{" "}
               <Link className="text-[#1586fd]" href="/forgot-password">

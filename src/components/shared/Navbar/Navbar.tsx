@@ -1,25 +1,11 @@
 "use client"
-
-import { getUserInfo, removeUserInfo } from "@/services/auth.service";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const Navbar = () => {
-    const router = useRouter()
-    const [userInfo, setUserInfo] =useState<any>(null)
+    const AuthButton = dynamic(() => import("@/components/ui/AuthButton/AuthButton"), { ssr: false })
     
-
-    useEffect(()=>{
-        const user = getUserInfo()
-        setUserInfo(user)
-    },[])
-
-   const handleLogout = () => {
-        removeUserInfo();
-        setUserInfo(null)
-    }
     return (
         <Container>
             <Stack py={2} direction="row" justifyContent="space-between" alignItems="center">
@@ -33,15 +19,7 @@ const Navbar = () => {
                     <Typography component={Link} href="/login">Diagonostics</Typography>
                     <Typography component={Link} href="/login">NGOs</Typography>
                 </Stack>
-                {
-                    userInfo?.userId ? (
-
-                        <Button color="error"  onClick={handleLogout} >Log Out</Button>
-                    ) :
-                        (
-                            <Button component={Link} href="/login">Login</Button>
-                        )
-                }
+              <AuthButton />
             </Stack>
         </Container>
     );
