@@ -21,7 +21,10 @@ const Footer = () => {
                     <Image width={40} height={40} src={twitter} alt="twitter" />
                     <Image width={40} height={40} src={facebookIcon} alt="linkedin" />
                 </Stack>
-                <div className="border-b-[1px] border-dashed"></div>
+                {/* <div className="border-b-[1px] border-dashed"></div> */}
+                <Box sx={{
+                    border: "1px solid lightgray",
+                }}></Box>
                 <Stack direction="row" gap={4} justifyContent={"space-between"} alignItems={"center"} py={3}>
                     <Typography color={"white"} component={Link} href="/about">
                         &copy; {new Date().getFullYear()} All Rights Reserved

@@ -12,6 +12,7 @@ import PHForms from "@/components/Forms/PHForms";
 import PHInput from "@/components/Forms/PHInput";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 
 const validationSchema = z.object({
@@ -22,21 +23,25 @@ const validationSchema = z.object({
 
 const LoginPage = () => {
   const router = useRouter();
+  const [error, setError] = useState("")
 
   const handleLogin = async (data: FieldValues) => {
     try {
       const response = await userLogin(data);
-      if(response?.data?.accessToken){
+      if (response?.data?.accessToken) {
         toast.success(response?.message)
         storeUserInfo(response?.data?.accessToken)
-        router.push("/")
+        router.push("/dashboard")
       }
-       
+      else {
+        setError(response?.message)
+      }
+
     } catch (error) {
       toast.error("Login failed. Please try again.");
       console.log(error);
     }
-    
+
   };
 
   return (
@@ -73,8 +78,33 @@ const LoginPage = () => {
               </Typography>
             </Box>
           </Stack>
+
+          {
+            error && (
+              <Box my={2}>
+                <Typography fontWeight={300} sx={{
+                  backgroundColor: "red",
+                  padding: "1px",
+                  color: "white",
+                  borderRadius: "2px",
+                  marginTop: "5px",
+
+                }}>
+                  {error}
+                </Typography>
+              </Box>
+            )
+          }
+
           <Box>
-            <PHForms onSubmit={handleLogin} resolver={zodResolver(validationSchema)}>
+            <PHForms
+              onSubmit={handleLogin}
+              resolver={zodResolver(validationSchema)}
+              defaultValues={{
+                email: "",
+                password: "",
+              }}
+            >
               <Grid container spacing={2} my={1}>
                 <Grid item md={6}>
                   <PHInput

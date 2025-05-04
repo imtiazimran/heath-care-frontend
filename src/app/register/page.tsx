@@ -12,11 +12,22 @@ import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.service";
 import PHForms from "@/components/Forms/PHForms";
 import PHInput from "@/components/Forms/PHInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-
+const validationSchema = z.object({
+  patient: z.object({
+    name: z.string().nonempty("Name is required"),
+    email: z.string().email("Invalid email address").nonempty("Email is required"),
+    contactNumber: z.string().regex(/^\d{11}$/, "Contact number must be 11 digits").nonempty("Contact number is required"),
+    address: z.string().nonempty("Address is required"),
+  }),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+})
 
 
 const Register = () => {
+
   const router = useRouter()
 
   const handleRegister = async (values: FieldValues) => {
@@ -31,7 +42,7 @@ const Register = () => {
         const loginRes = await userLogin({ password: values.password, email: values.patient.email });
         if (loginRes?.data?.accessToken) {
           storeUserInfo(loginRes?.data?.accessToken)
-          router.push("/")
+          router.push("/dashboard")
         }
       }
       console.log(response);
@@ -83,7 +94,18 @@ const Register = () => {
               </Box>
             </Stack>
             <Box>
-              <PHForms onSubmit={handleRegister}>
+              <PHForms 
+              resolver={zodResolver(validationSchema)}
+              defaultValues={{
+                patient: {
+                  name: "",
+                  email: "",
+                  contactNumber: "",
+                  address: ""
+                },
+                password: ""
+              }}
+              onSubmit={handleRegister}>
                 <Grid container spacing={2} my={1}>
                   <Grid item md={12}>
                     <PHInput name="patient.name" size="small" fullWidth={true}  label="Name" type="text" />
@@ -99,7 +121,7 @@ const Register = () => {
                     <PHInput name="patient.contactNumber" size="small" fullWidth={true}  label="Contact Number" type="tel" />
                   </Grid>
                   <Grid item md={6}>
-                    <PHInput name="patient.address" required={false} size="small" fullWidth={true}  label="Address" type="text" />
+                    <PHInput name="patient.address" size="small" fullWidth={true}  label="Address" type="text" />
                   </Grid>
                 </Grid>
                 <Button type="submit" sx={{ my: 2 }} fullWidth={true} >Register</Button>
